@@ -27,27 +27,34 @@ button.addEventListener("click", () => {
 
 
 //new form stuff
-const newFormContainer = document.querySelector("#addBean");
+const beanFormContainer = document.querySelector("#addBean");
 
 function sendBean (userServiceRequest) {
     const fetchOptions = {
-
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userServiceRequest)
     }
+    return fetch(url, fetchOptions).then(resp => resp.json()).then(addedBean => {
+        console.log(addedBean)
+    })
 }
 
 const AddBean = () => {
     let html = `
     <div class="field">
         <label class="label" for="bvName">Name</label>
-        <label type="text" name="bvName" class="input" />
+        <input type="text" name="bvName" class="input" />
     </div>
     <div class="field">
         <label class="label" for="bvRegion">Region</label>
-        <label type="text" name="bvRegion" class="input" />
+        <input type="text" name="bvRegion" class="input" />
     </div>
     <div class="field">
-        <label class="label" for="bvNotes">Name</label>
-        <label type="text" name="bvNotes" class="input" />
+        <label class="label" for="bvNotes">Notes</label>
+        <input type="text" name="bvNotes" class="input" />
     </div>
 
     <button class="button" id="submitBean"> Add a Bean Variety</button>
@@ -56,14 +63,27 @@ const AddBean = () => {
 
 }
 
-beanFormContainer.innerHtml = AddBean();
+beanFormContainer.innerHTML = AddBean();
 const beanButton = document.querySelector("#submitBean");
 
-beanButton.addEventListener
+beanButton.addEventListener("click", clickEvent => {
+    if(clickEvent.target.id === "submitBean") {
+        //get what was typed in by user
+        const beanName = document.querySelector("input[name='bvName']").value
+        const beanRegion = document.querySelector("input[name='bvRegion']").value
+        const beanNotes = document.querySelector("input[name='bvNotes']").value
 
+        //make an object out of user data 
+        const beanToSendToAPI = {
+            name: beanName,
+            region: beanRegion,
+            notes: beanNotes
+        }
 
-
-
+        //send to spi
+        sendBean(beanToSendToAPI);
+    }
+})
 
 
 
